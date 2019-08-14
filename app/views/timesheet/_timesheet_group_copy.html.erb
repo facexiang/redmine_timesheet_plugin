@@ -1,0 +1,32 @@
+<table class="list issues">
+  <thead>
+    <th width="2%">
+      <%= link_to image_tag('toggle_check.png'), "javascript:;",
+        :onclick => 'toggleTimeEntriesSelectionProject(this); return false;',
+        :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}", :class => 'toggle-all' %>
+    </th>
+    <th width="8%"><%= l(:label_date) %></th>
+    <th width="10%"><%= l(:label_member) %></th>
+    <th width="10%"><%= l(:label_tracker) %></th>
+    <th width="10%"><%= l(:label_activity) %></th>
+    <th width="10%"><%= l(:label_project) %></th>
+    <th width="15%"><%= l(:label_version) %></th>
+    <th width="10%"><%= l(:label_issue) %></th>
+    <th width="25%"><%= l(:field_comments) %></th>
+    <th width="10%"><%= l(:field_hours) %></th>
+    <%= call_hook(:plugin_timesheet_views_timesheet_group_header, {}) %>
+    <th></th>
+  </thead>
+  <tbody>
+    <% user_selected(@timesheet).each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.roles.map(&:name).join(',') %></td>
+        <td><%= user.custom_field_values.last.value %></td>
+      </tr>
+      
+    <% end %>
+    <%= render :partial => "time_entry", :collection => entry[:logs], :locals => { :time_entries => entry[:logs] } %>
+  </tbody>
+</table>
+<br />

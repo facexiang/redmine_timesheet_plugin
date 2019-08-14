@@ -1,4 +1,4 @@
-<h2><%= l(:timesheet_title)%></h2>
+<h2><%= l(:timesheet_title)%> <%= link_to '未来一个月人员计划安排表', timesheet_plan_path %> </h2>
 <%= render :partial => 'form' %>
 <% content_for(:header_tags) do %>
 <%= stylesheet_link_tag 'timesheet.css', :plugin => 'redmine_timesheet_plugin', :media => 'all' %>

@@ -104,6 +104,21 @@ class TimesheetController < ApplicationController
     redirect_to :action => 'index'
   end
 
+  def plan
+    @projects = Project.active
+    @users = User.logged.status(1).to_a
+    sql_str = "assigned_to_id IS NOT NULL AND ((start_date >= :s AND due_date <= :d) OR (start_date >= :s AND due_date IS NULL))"
+    @issues = Issue.select("assigned_to_id, project_id, min(start_date) start_date, max(due_date) due_date").
+      where([sql_str, {s: Date.today, d: Date.today.months_since(1)}]).group(:assigned_to_id, :project_id)
+    @user_hash = @issues.inject({}) do |hs, item|
+      p_hash = hs[item.assigned_to_id] || {}
+      p_hash[item.project_id] = [item.start_date.to_s, item.due_date.to_s]
+      hs[item.assigned_to_id] = p_hash
+      hs
+    end
+    #@memberships = @user.memberships.preload(:roles, :project).where(Project.visible_condition(User.current)).to_a
+  end
+
   private
   def get_list_size
     @list_size = Setting.plugin_redmine_timesheet_plugin['list_size'].to_i

@@ -4,6 +4,7 @@ if Rails::VERSION::MAJOR >= 3
     get 'timesheet/context_menu', :to => 'timesheet#context_menu'
     match 'timesheet/report', :to => 'timesheet#report', :via => [:get, :post]
     match 'timesheet/reset', :to => 'timesheet#reset', :via => :delete
+    match 'timesheet/plan', :to => 'timesheet#plan', :via => :get
   end
 else
   ActionController::Routing::Routes.draw do |map|

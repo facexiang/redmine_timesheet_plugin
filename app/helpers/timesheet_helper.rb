@@ -123,4 +123,42 @@ module TimesheetHelper
                         [l(:label_this_year), 'current_year']],
                         value)
   end
+
+  def user_selected(timesheet)
+    Timesheet.viewable_users.sort { |a,b| a.to_s.downcase <=> b.to_s.downcase }.select{|u| u.id.in?(timesheet.users)}
+  end
+
+  def project_colors(timesheet)
+    arr = %w{Black BlanchedAlmond Blue BlueViolet Brown BurlyWood CadetBlue Chartreuse Chocolate Coral CornflowerBlue Cornsilk Crimson Cyan DarkBlue DarkCyan DarkGoldenRod DarkGray DarkGreen DarkKhaki DarkMagenta DarkOliveGreen Darkorange DarkOrchid DarkRed DarkSalmon DarkSeaGreen DarkSlateBlue DarkSlateGray DarkTurquoise DarkViolet DeepPink DeepSkyBlue DimGray DodgerBlue FireBrick}
+    hash = {}
+    timesheet.projects.each do |pro|
+      hash[pro.id] = [ arr.pop, pro.name ]
+    end
+    hash
+  end
+
+  def user_time_pro(timesheet)
+    hash = {}
+    timesheet.time_entries.each do |project, logs|
+      logs[:logs].each do |log|
+        time_hash = hash[log.user_id] || {}
+        pro_arr = time_hash[log.spent_on.to_s] || []
+        pro_arr << log.project_id
+        time_hash[log.spent_on.to_s] = pro_arr
+        hash[log.user_id] = time_hash
+      end
+    end
+    hash
+    #@grand_total = @total.collect{|k,v| v}.inject{|sum,n| sum + n}
+  end
+
+  def color_arr(projects)
+    arr = %w{SkyBlued DeepSkyBlue LightBlue PowderBlue CadetBlue PaleTurquoise Cyan Aqua DarkTurquoise DarkSlateGray DarkCyan Teal MediumTurquoise LightSeaGreen Turquoise Aquamarine MediumAquamarine MediumSpringGreen SpringGreen MediumSeaGreen SeaGreen LightGreen PaleGreen DarkSeaGreen LimeGreen Lime ForestGreen Green DarkGreen Chartreuse LawnGreen GreenYellow DarkOliveGreen YellowGreen OliveDrab LightGoldenrodYellow Yellow Olive DarkKhaki LemonChiffon PaleGoldenrod Khaki Gold Cornsilk Goldenrod DarkGoldenrod Wheat Moccasin Orange PapayaWhip BlanchedAlmond NavajoWhite AntiqueWhite Tan BurlyWood Bisque DarkOrange Linen Peru PeachPuff SandyBrown Chocolate SaddleBrown Sienna LightSalmon Coral OrangeRed DarkSalmon Tomato MistyRose Salmon LightCoral RosyBrown IndianRed Red Brown FireBrick DarkRed Maroon Gainsboro LightGrey Silver DarkGray Gray DimGray Black LightPink Pink Crimson LavenderBlush PaleVioletRed HotPink DeepPink MediumVioletRed Orchid Thistle Plum Violet Magenta Fuchsia DarkMagenta Purple MediumOrchid DarkViolet DarkOrchid Indigo BlueViolet MediumPurple MediumSlateBlue SlateBlue DarkSlateBlue Lavender Blue MediumBlue MidnightBlue DarkBlue Navy RoyalBlue CornflowerBlue LightSteelBlue LightSlateGray SlateGray DodgerBlue SteelBlue LightSkyBlue}
+    hash = {}
+    projects.each do |pro|
+      hash[pro.id] = [ arr.pop, pro.name ]
+    end
+    hash
+  end
+
 end

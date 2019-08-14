@@ -1,0 +1,66 @@
+<% c_arr = color_arr(@projects) %>
+<% total_month_hash = ((Date.today - 7)..Date.today.months_since(1)).inject({}){|hh, item| hh[item.month]||=[]; hh[item.month]+=[item.to_s]; hh} %>
+<% since_month_hash = (Date.today..Date.today.months_since(1)).inject({}){|hh, item| hh[item.month]||=[]; hh[item.month]+=[item.to_s]; hh} %>
+<div style='width:100%;overflow:scroll;'>
+  <h2>未来一个月人员计划安排表</h2>
+  <table class="list issues">
+    <thead>
+      <tr>
+        <th colspan='2'></th>
+        <% since_month_hash.keys.each do |k| %>
+          <th colspan='<%= since_month_hash[k].length %>'><%= k %>月</th>
+        <% end %>
+      </tr>
+      <tr>
+        <th width='50' style='min-width:50px;' rowspan='2'>名称</th>
+        <%#<th width='80' style='min-width:102px;' rowspan='2'>角色</th>%>
+        <th width='50' style='min-width:50px;' rowspan='2'>级别</th>
+        <% (day_arr = since_month_hash.values.flatten).each do |day| %>
+          <th><%= day.to_date.day %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <% p_d_arr = @user_hash[user.id] %>
+        <tr>
+          <td><%= user.name %></td>
+          <!--<td><%#= raw user.roles.map(&:name).join('<br>') %></td>-->
+          <td><%= user.custom_field_values.last.value %></td>
+          <% day_arr.each do |day| %>
+            <% if p_d_arr.blank? %>
+              <td></td>
+            <% else %>
+              <td style='padding-right:0px;'>
+
+              <% p_d_arr.each do |pid, date_arr| %>
+                <% s_date, d_date = date_arr %>
+                <% color, name = c_arr[pid] %>
+                <% if (day == s_date || day == d_date) || (day > s_date && (day < d_date || d_date.blank?)) %>
+                      <div class="tooltip" style='display:inline-table;height:15px;margin-left: -3px;'>
+                        <span style="display:inline-block;width:15px;height:15px;background-color:<%= color %>"></span>
+                        <span class="tip">
+                          <strong><%= name %></strong>
+                        </span>
+                      </div>
+                <% end %>
+              <% end %>
+
+              </td>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <% c_arr.each do |pid, arr| %>
+        <tr style='border-bottom:1px solid #dfdfdf;'>
+          <td colspan='<%= c_arr.length + 3 %>' style='text-align:left;padding-left:33px;'>
+            <span style="margin-bottom:-2px;display:inline-block;width:36px;height:12px;background-color:<%= arr[0] %>"></span> <%= arr[1] %>
+          </td>
+        </tr>
+      <% end %>
+    </tfoot>
+  </table>
+</div>
+<br />
