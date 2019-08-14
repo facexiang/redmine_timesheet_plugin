@@ -1,8 +1,12 @@
 <div id="timesheet-form">
   <%= form_for @timesheet, url: {action: 'report'} do |f|  %>
     <fieldset>
+      <div class="group-by" style='float:left;'>
+        <label for="timesheet_sort" style='display:inline-block;'><%= l(:timesheet_group_by) %>:</label>
+        <%= select_tag("timesheet[sort]", options_for_select(Timesheet::ValidSortOptions.invert, @timesheet.sort)) %>
+      </div>
       <div>
-        <div class="radiobutton-label">
+        <div class="radiobutton-label" style='display:inline-block;'>
           <%= f.radio_button :period_type, Timesheet::ValidPeriodType[:default]  %>
           <%f.label :period_type, l(:timesheet_date_range_label)%>
           <label for="timesheet_period_type_1"><%= %></label>
@@ -11,22 +15,17 @@
           id: 'select_timesheet_period_type_1', :onfocus => '$("timesheet_period_type_1").checked = true;'%>
       </div>
       <div>
-        <div class="radiobutton-label">
+        <div class="radiobutton-label" style='display:inline-block;'>
           <%= f.radio_button :period_type, Timesheet::ValidPeriodType[:free_period] %>
           <%=  f.label :date_from, l(:timesheet_date_from_label)%>
         </div>
         <span id="select_timesheet_period_type_2" onclick="$('#timesheet_period_type_2').checked = true;">
           <%= f.date_field :date_from, size: 10, value: f.object.date_from %><%= calendar_for('timesheet_date_from') %>
-          <%=  f.label :date_to, l(:timesheet_date_to_label)%>
+          <%=  f.label :date_to, l(:timesheet_date_to_label), style: 'display:inline-block;' %>
           <%= f.date_field :date_to, size: 10, value: f.object.date_to %><%= calendar_for('timesheet_date_to') %>
         </span>
       </div>
-      
-      <div class="group-by">
-        <label for="timesheet_sort"><%= l(:timesheet_group_by) %></label>
-        <%= select_tag("timesheet[sort]", options_for_select(Timesheet::ValidSortOptions.invert, @timesheet.sort)) %>
-      </div>
-      
+
       <div class="timesheet-projects">
         <label for="timesheet_projects_" class="select-all"><%= l(:timesheet_project_label)%></label>
         <%= select_tag 'timesheet[projects][]', project_options(@timesheet), { multiple: true, size: @list_size} %>
@@ -51,7 +50,7 @@
       </div>
       <%= call_hook(:plugin_timesheet_view_timesheet_form, { :timesheet => @timesheet, :params => params, :list_size => @list_size }) %>
       <div class="form-actions">
-        <%= submit_tag l(:button_apply),:class => 'button-small' -%>
+        <%= submit_tag l(:button_apply), class: 'button-small', style: 'border: 1px solid #C9C9C9;' -%>
       </div>
     </fieldset>
   <% end %>
