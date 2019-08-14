@@ -37,8 +37,8 @@
                 <% s_date, d_date = date_arr %>
                 <% color, name = c_arr[pid] %>
                 <% if (day == s_date || day == d_date) || (day > s_date && (day < d_date || d_date.blank?)) %>
-                      <div class="tooltip" style='display:inline-table;height:15px;margin-left: -3px;'>
-                        <span style="display:inline-block;width:15px;height:15px;background-color:<%= color %>"></span>
+                      <div class="tooltip" style='display:inline-table;margin-left:-3px;'>
+                        <span style="display:inline-block;color:#fff;min-width:16px;background-color:<%= color %>"><%= pid %></span>
                         <span class="tip">
                           <strong><%= name %></strong>
                         </span>
@@ -56,6 +56,7 @@
       <% c_arr.each do |pid, arr| %>
         <tr style='border-bottom:1px solid #dfdfdf;'>
           <td colspan='<%= c_arr.length + 3 %>' style='text-align:left;padding-left:33px;'>
+            <span style='display:inline-block;min-width:20px;text-align:right;'><%= pid %></span>
             <span style="margin-bottom:-2px;display:inline-block;width:36px;height:12px;background-color:<%= arr[0] %>"></span> <%= arr[1] %>
           </td>
         </tr>
