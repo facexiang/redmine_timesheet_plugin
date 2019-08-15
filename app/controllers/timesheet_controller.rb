@@ -105,8 +105,21 @@ class TimesheetController < ApplicationController
   end
 
   def plan
+    load_filters_from_session
+    unless @timesheet
+      @timesheet ||= Timesheet.new
+    end
+
+    user_scope = User.logged.status(1)
+    if params[:group_id].present?
+      user_scope = user_scope.in_group(params[:group_id])
+      @group = Group.find(params[:group_id])
+    end
+
+    @users = user_scope.to_a
+    #@users = User.logged.status(1).to_a
+
     @projects = Project.active
-    @users = User.logged.status(1).to_a
     sql_str = "assigned_to_id IS NOT NULL AND ((start_date >= :s AND due_date <= :d) OR (start_date >= :s AND due_date IS NULL))"
     @issues = Issue.select("assigned_to_id, project_id, min(start_date) start_date, max(due_date) due_date").
       where([sql_str, {s: Date.today, d: Date.today.months_since(1)}]).group(:assigned_to_id, :project_id)

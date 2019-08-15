@@ -1,0 +1,14 @@
+<div id="timesheet-form">
+  <%= form_for @timesheet, url: {action: 'plan'}, method: :get do |f|  %>
+    <fieldset>
+      <div class="group-by" style='float:left;'>
+        <label for="timesheet_sort" style='display:inline-block;'>部门:</label>
+        <%= select_tag :group_id, options_from_collection_for_select(Group.all, :id, :name, params[:group_id]), prompt: "所有部门" %>
+      </div>
+
+      <div class="form-actions" style='width:auto;'>
+        <%= submit_tag '确定', class: 'button-small', style: 'border:1px solid #C9C9C9;background-color:#fff;border-radius:5px;' -%>
+      </div>
+    </fieldset>
+  <% end %>
+</div>
