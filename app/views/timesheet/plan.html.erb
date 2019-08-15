@@ -1,8 +1,8 @@
 <style type="text/css">
-  #plan_list table thead tr th { padding:4px 0px; }
-  #plan_list table tbody tr td { padding-right: 0px; }
-  #plan_list table tfoot tr { border-bottom:1px solid #dfdfdf; }
-  #plan_list table tfoot tr td { text-align:left; }
+  #plan_list table thead tr th { padding: 4px 0px; }
+  #plan_list table tbody tr td { padding-left: 5px; padding-right: 3px; white-space: nowrap; }
+  #plan_list table tfoot tr { border-bottom: 1px solid #dfdfdf; }
+  #plan_list table tfoot tr td { text-align: left; }
 </style>
 <h2>未来一个月人员计划安排表</h2>
 <% c_arr = color_arr(@projects) %>
@@ -63,9 +63,8 @@
       <% total = (c_arr.length + 2) %>
       <% c_arr.to_a.in_groups_of(3).each do |_arr| %>
         <tr>
-          <td></td>
           <% _arr.each do |pid, arr| %>
-            <td colspan='<%= cycle(9, 9, total - 18) -%>'>
+            <td colspan='<%= cycle(7, 7, total - 14) -%>'>
               <%#<span style='display:inline-block;min-width:20px;text-align:right;'>[>= pid <]</span>%>
               <% if arr.present? %>
                 <span style="text-align:center;color:#fff;display:inline-block;width:40px;background-color:<%= arr[0] %>"><%= pid %></span> <%= arr[1] %>
