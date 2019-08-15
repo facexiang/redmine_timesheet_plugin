@@ -120,7 +120,8 @@ class TimesheetController < ApplicationController
     #@users = User.logged.status(1).to_a
 
     @projects = Project.active
-    sql_str = "assigned_to_id IS NOT NULL AND ((start_date >= :s AND due_date <= :d) OR (start_date >= :s AND due_date IS NULL))"
+    #sql_str = "assigned_to_id IS NOT NULL AND ((start_date >= :s AND due_date <= :d) OR (start_date >= :s AND due_date IS NULL))"
+    sql_str = "assigned_to_id IS NOT NULL AND status_id IN (1, 2) and start_date <= :d"
     @issues = Issue.select("assigned_to_id, project_id, min(start_date) start_date, max(due_date) due_date").
       where([sql_str, {s: Date.today, d: Date.today.months_since(1)}]).group(:assigned_to_id, :project_id)
     @user_hash = @issues.inject({}) do |hs, item|
